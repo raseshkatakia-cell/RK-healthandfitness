@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Workouts — RK Health and Fitness App</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#000000">
+<style>
+/* slightly larger cards for workout steps */
+.work-card { padding:16px; border-radius:12px; margin-bottom:14px; }
+.work-level { display:flex; gap:12px; align-items:center; }
+.level-badge { padding:8px 12px; background:linear-gradient(90deg,#b8860b,#f6c344); color:#000; font-weight:800; border-radius:10px; }
+.exercise { display:flex; gap:12px; align-items:flex-start; background:rgba(255,215,0,0.02); border-radius:10px; padding:12px; margin-top:10px; border:1px solid rgba(200,155,0,0.06); }
+.exercise svg { width:84px; height:84px; flex:0 0 84px; border-radius:8px; background:#000; padding:8px; box-shadow:0 6px 18px rgba(0,0,0,0.6); }
+.exercise .ex-body { flex:1; }
+.exercise .ex-title { color:#f6c344; font-weight:800; font-size:16px; margin-bottom:6px; }
+.exercise .ex-desc { color:#d4b86a; font-size:14px; line-height:1.5; }
+.controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+.level-btn { padding:10px 14px; border-radius:10px; background:linear-gradient(90deg,#0a0000,#000); border:1px solid rgba(200,155,0,0.12); color:#f6c344; font-weight:800; cursor:pointer; }
+.note { font-size:13px; color:#bfa45a; margin-top:8px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="icons/icon-192.png" alt="RK" />
+    <div class="header-title">WORKOUTS</div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn" onclick="location.href='index.html'">HOME</button>
+    <button class="btn" onclick="location.href='calculators.html'">CALCULATORS</button>
+    <button class="btn" onclick="location.href='diet.html'">DIET</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="card work-card">
+    <div class="work-level">
+      <div class="level-badge">BEGINNER</div>
+      <div>
+        <div class="title">Full-body beginner routine</div>
+        <div class="small">Low impact — perfect for starting out. Do this 3× per week.</div>
+      </div>
+    </div>
+
+    <!-- Exercise 1 -->
+    <div class="exercise">
+      <!-- SVG: bodyweight squat -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,6)" fill="none" stroke="#f6c344" stroke-width="2">
+          <circle cx="14" cy="6" r="3" stroke="#f6c344" fill="#000"/>
+          <path d="M14 9 v10" stroke="#f6c344" />
+          <path d="M6 24 C10 20,18 20,22 24" stroke="#f6c344" />
+          <path d="M8 26 v6" stroke="#f6c344" />
+          <path d="M20 26 v6" stroke="#f6c344" />
+        </g>
+      </svg>
+
+      <div class="ex-body">
+        <div class="ex-title">Bodyweight Squats</div>
+        <div class="ex-desc">3 sets × 12 reps — Keep chest up, sit back into hips, knees tracking toes.</div>
+      </div>
+    </div>
+
+    <!-- Exercise 2 -->
+    <div class="exercise">
+      <!-- SVG: push-up -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,10)" stroke="#f6c344" stroke-width="2" fill="none">
+          <path d="M0 30 h44" stroke="#f6c344"/>
+          <path d="M6 24 q8 -10 20 0" stroke="#f6c344"/>
+          <circle cx="6" cy="30" r="2" fill="#f6c344"/>
+          <circle cx="38" cy="30" r="2" fill="#f6c344"/>
+        </g>
+      </svg>
+
+      <div class="ex-body">
+        <div class="ex-title">Incline Push-ups</div>
+        <div class="ex-desc">3 sets × 8–12 reps — Use a bench or wall if needed. Keep core tight.</div>
+      </div>
+    </div>
+
+    <!-- Exercise 3 -->
+    <div class="exercise">
+      <!-- SVG: plank -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,12)" stroke="#f6c344" stroke-width="2" fill="none">
+          <rect x="2" y="12" width="36" height="6" rx="1" stroke="#f6c344" />
+          <path d="M4 12 v-6 q8 -6 28 0 v6" stroke="#f6c344"/>
+        </g>
+      </svg>
+
+      <div class="ex-body">
+        <div class="ex-title">Plank</div>
+        <div class="ex-desc">3 × 30–45 seconds — Keep a straight line from head to heels, breathe steadily.</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="level-btn" onclick="showLevel('beginner')">Open Beginner Program</button>
+      <button class="level-btn" onclick="location.href='workouts.html#intermediate'">Next: Intermediate</button>
+    </div>
+    <div class="note">Tip: warm up 5–8 minutes before starting (light cardio + mobility).</div>
+  </section>
+
+  <!-- INTERMEDIATE -->
+  <section class="card work-card" id="intermediate">
+    <div class="work-level">
+      <div class="level-badge">INTERMEDIATE</div>
+      <div>
+        <div class="title">Split routine — strength & conditioning</div>
+        <div class="small">4 sessions per week: Push / Pull / Legs / Core+Cardio</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: dumbbell row -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,8)" stroke="#f6c344" stroke-width="2" fill="none">
+          <rect x="0" y="28" width="28" height="4" rx="1"/>
+          <path d="M28 10 l10 -6 l6 0 l0 24 l-6 0 l-10 -6" stroke="#f6c344"/>
+          <circle cx="6" cy="30" r="2" fill="#f6c344"/>
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Bent-over Dumbbell Rows</div>
+        <div class="ex-desc">4 sets × 8–10 reps — Use controlled tempo, squeeze shoulder blades.</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: lunge -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,6)" stroke="#f6c344" stroke-width="2" fill="none">
+          <path d="M10 42 v-12 l8 -6 l6 6" stroke="#f6c344"/>
+          <circle cx="10" cy="44" r="2" fill="#f6c344"/>
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Walking Lunges</div>
+        <div class="ex-desc">3 sets × 12 steps per leg — Keep torso upright, step long enough to load glute.</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: mountain climber -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,8)" stroke="#f6c344" stroke-width="2" fill="none">
+          <path d="M6 34 h28" stroke="#f6c344"/>
+          <path d="M8 24 l8 -10 l8 10" stroke="#f6c344"/>
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Mountain Climbers</div>
+        <div class="ex-desc">4 × 40 seconds — High tempo to raise heart rate & core engagement.</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="level-btn" onclick="showLevel('intermediate')">Open Intermediate Program</button>
+      <button class="level-btn" onclick="location.href='workouts.html#advanced'">Next: Advanced</button>
+    </div>
+    <div class="note">Tip: progressive overload — increase weight or reps slightly every week.</div>
+  </section>
+
+  <!-- ADVANCED -->
+  <section class="card work-card" id="advanced">
+    <div class="work-level">
+      <div class="level-badge">ADVANCED</div>
+      <div>
+        <div class="title">High intensity — strength & fat loss</div>
+        <div class="small">Push your limits. 5–6 sessions/week with heavy lifts & conditioning.</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: barbell -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,20)" stroke="#f6c344" stroke-width="2" fill="none">
+          <rect x="0" y="8" width="44" height="4" rx="1" />
+          <rect x="-6" y="0" width="6" height="20" rx="1" />
+          <rect x="44" y="0" width="6" height="20" rx="1" />
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Barbell Deadlifts</div>
+        <div class="ex-desc">5 sets × 5 reps — Heavy, focus on form: neutral spine, drive hips forward.</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: kettlebell swing -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(8,10)" stroke="#f6c344" stroke-width="2" fill="none">
+          <circle cx="18" cy="22" r="8"/>
+          <path d="M18 6 v6" />
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Kettlebell Swings</div>
+        <div class="ex-desc">4 sets × 15 reps — Hinge, explosive hips, controlled return.</div>
+      </div>
+    </div>
+
+    <div class="exercise">
+      <!-- SVG: sprint -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <rect width="64" height="64" rx="8" fill="#020202"/>
+        <g transform="translate(6,10)" stroke="#f6c344" stroke-width="2" fill="none">
+          <path d="M10 34 l10 -18 l6 8" />
+          <path d="M6 34 h28" />
+        </g>
+      </svg>
+      <div class="ex-body">
+        <div class="ex-title">Sprint Intervals</div>
+        <div class="ex-desc">10 × 30s sprint / 60s walk — Max effort for fat loss & conditioning.</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="level-btn" onclick="showLevel('advanced')">Open Advanced Program</button>
+      <button class="level-btn" onclick="location.href='index.html'">Back Home</button>
+    </div>
+    <div class="note">Warning: advanced sessions require good recovery and nutrition. Consult a professional if unsure.</div>
+  </section>
+
+  <!-- Footer quick links -->
+  <div class="card" style="text-align:center">
+    <div class="small">Need images replaced? Put new SVG/PNG files in the <code>icons/</code> folder or edit text directly in this file.</div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap;">
+      <button class="btn" onclick="location.href='calculators.html'">Open Calculators</button>
+      <button class="btn" onclick="location.href='diet.html'">Open Diet Planner</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+/* simple helpers — showLevel opens an anchor or scrolls */
+function showLevel(level){
+  if(!level) return;
+  location.href = 'workouts.html#' + level;
+  setTimeout(()=> {
+    const el = document.getElementById(level);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 120);
+}
+
+/* when landing with hash, scroll to it */
+window.addEventListener('load', ()=>{
+  if(location.hash){
+    const id = location.hash.replace('#','');
+    const el = document.getElementById(id);
+    if(el) setTimeout(()=> el.scrollIntoView({behavior:'smooth', block:'start'}), 200);
+  }
+});
+</script>
+
+</body>
+<script>
+(function(){
+  try{
+    const s = JSON.parse(localStorage.getItem('rk_settings') || 'null');
+    if(!s) return;
+    // title
+    if(s.title){
+      // set page header title if present
+      const hdr = document.querySelector('.header-title');
+      if(hdr) hdr.textContent = s.title.includes('Admin') ? 'RK Admin' : s.title;
+      // set document title
+      document.title = s.title;
+    }
+    // email replacement (if any element references it)
+    if(s.email){
+      document.querySelectorAll('span, p, a, div').forEach(el=>{
+        if(el.innerHTML && el.innerHTML.indexOf('rkfitnessapp81@gmail.com') !== -1){
+          el.innerHTML = el.innerHTML.replace(/rkfitnessapp81@gmail.com/g, s.email);
+        }
+      });
+    }
+    // logo
+    if(s.logoData){
+      document.querySelectorAll('img').forEach(img=>{
+        const src = img.getAttribute('src') || '';
+        if(src.indexOf('icons/icon-192.png') !== -1 || src.indexOf('icons/icon-512.png') !== -1){
+          img.src = s.logoData;
+        }
+      });
+    }
+    // If diet/workouts are present and pages expect them via window.RK_DYNAMIC, attach them:
+    if(s.diet) window.RK_DYNAMIC = window.RK_DYNAMIC || {};
+    if(s.diet) window.RK_DYNAMIC.diet = s.diet;
+    if(s.workouts) window.RK_DYNAMIC.workouts = s.workouts;
+  }catch(e){
+    console.log('No admin settings applied');
+  }
+})();
+</script>
+</html>

@@ -1,0 +1,114 @@
+/* ============================
+   GLOBAL PREMIUM BLACK + GOLD THEME
+   ============================ */
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #000000;
+  color: #f6c344;
+}
+
+.container {
+  width: 92%;
+  max-width: 900px;
+  margin: auto;
+  padding-top: 20px;
+}
+
+/* GOLD GLASS CARD */
+.card {
+  background: linear-gradient(180deg, rgba(255,215,0,0.05), rgba(0,0,0,0.35));
+  border: 1px solid rgba(255,215,0,0.15);
+  box-shadow: 0 0 15px rgba(255,215,0,0.15);
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.kicker {
+  font-size: 13px;
+  color: #d4b86a;
+  margin-bottom: 3px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f6c344;
+  margin-bottom: 10px;
+}
+
+.small {
+  color: #d4b86a;
+  line-height: 1.6;
+}
+
+/* BUTTONS */
+.btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, #f6c344, #b8860b);
+  border: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* NAV BUTTONS GRID */
+.icon-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.icon-btn {
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(140deg, rgba(255,215,0,0.12), rgba(0,0,0,0.6));
+  border: 1px solid rgba(255,215,0,0.2);
+  color: #f6c344;
+  box-shadow: 0 0 12px rgba(255,215,0,0.15);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.icon-btn small {
+  display: block;
+  font-size: 11px;
+  color: #d4b86a;
+}
+
+/* HEADER */
+.header {
+  position: sticky;
+  top: 0;
+  background: #000000f0;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,215,0,0.18);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+.header img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  box-shadow: 0 0 18px rgba(255,215,0,0.25);
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f6c344;
+}

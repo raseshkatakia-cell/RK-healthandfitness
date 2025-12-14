@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Admin — RK Health and Fitness App</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+  .admin-wrap{max-width:980px;margin:18px auto;padding:18px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .field{flex:1;min-width:220px}
+  textarea.large{width:100%;height:220px;background:#070606;color:#f6c344;border:1px solid rgba(255,215,0,0.08);padding:10px;border-radius:8px}
+  label.small{display:block;color:#d4b86a;margin-bottom:6px}
+  .inline{display:inline-block}
+  .note{color:#bfa45a;font-size:13px;margin-top:8px}
+  .logo-preview{width:140px;height:140px;object-fit:contain;border-radius:12px;border:1px solid rgba(255,215,0,0.1);box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+</style>
+</head>
+<body>
+<header class="header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="icons/icon-192.png" alt="RK" />
+    <div class="header-title">ADMIN PANEL</div>
+  </div>
+  <div><button class="btn" onclick="location.href='index.html'">APP HOME</button></div>
+</header>
+
+<main class="admin-wrap card">
+  <div class="kicker">ADMIN — EDIT APP CONTENT</div>
+  <div class="title">Local Admin (Client-side)</div>
+
+  <p class="small">Use this admin to edit app title, email, logo, diet plans, workouts and save them in your browser. Use <strong>Export</strong> to create a JSON backup you can import on another device or paste into repo files.</p>
+
+  <!-- AUTH -->
+  <div style="margin-top:12px">
+    <label class="small">Admin password</label>
+    <input id="admin_pass" class="input" placeholder="Enter admin password">
+    <div class="note">Default password: <strong>RKfit@2025</strong>. Change below.</div>
+  </div>
+
+  <hr style="border-color:rgba(255,215,0,0.06)"/>
+
+  <!-- Basic app settings -->
+  <div class="row" style="margin-top:10px">
+    <div class="field">
+      <label class="small">App Title</label>
+      <input id="field_title" class="input" placeholder="RK Health and Fitness App">
+    </div>
+    <div class="field">
+      <label class="small">Contact Email</label>
+      <input id="field_email" class="input" placeholder="rkfitnessapp81@gmail.com">
+    </div>
+
+    <div style="min-width:160px">
+      <label class="small">Set Admin Password</label>
+      <input id="field_newpass" class="input" placeholder="Change admin password (optional)">
+    </div>
+  </div>
+
+  <!-- logo -->
+  <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+    <div>
+      <label class="small">Upload App Logo (will be saved locally)</label>
+      <input id="logo_file" type="file" accept="image/*" class="input">
+      <div class="note">PNG recommended. Logo is stored as base64 in localStorage.</div>
+    </div>
+    <div>
+      <label class="small">Preview</label><br>
+      <img id="logo_preview" class="logo-preview" src="icons/icon-192.png" alt="logo preview">
+    </div>
+  </div>
+
+  <hr style="border-color:rgba(255,215,0,0.06)"/>
+
+  <!-- Diet Plans (JSON) -->
+  <div style="margin-top:12px">
+    <label class="small">Diet Plans (JSON)</label>
+    <textarea id="diet_json" class="large" placeholder='{"veg": [...], "nonveg":[...], "combo":[...]}'></textarea>
+    <div class="note">Edit the 7-day diet objects. Format matches the shipped diet.html structure. After editing click Save.</div>
+  </div>
+
+  <!-- Workouts (JSON) -->
+  <div style="margin-top:12px">
+    <label class="small">Workouts (JSON)</label>
+    <textarea id="workout_json" class="large" placeholder='{"beginner":[{title:"",desc:"",img:"data:"},...], "intermediate": [...], "advanced":[...]}'></textarea>
+    <div class="note">Workouts accept text and optionally base64 images (data URLs). See documentation below.</div>
+  </div>
+
+  <hr style="border-color:rgba(255,215,0,0.06)"/>
+
+  <!-- Buttons -->
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+    <button class="btn" onclick="adminSave()">Save changes</button>
+    <button class="btn" onclick="exportSettings()">Export JSON</button>
+    <button class="btn" onclick="importSettings()">Import JSON</button>
+    <button class="btn" onclick="resetSettings()">Reset to defaults</button>
+  </div>
+
+  <div style="margin-top:12px">
+    <label class="small">Quick actions</label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="applyToPages()">Apply settings to this browser (auto)</button>
+      <button class="btn" onclick="downloadLogo()">Download Logo (512 PNG)</button>
+    </div>
+  </div>
+
+  <hr style="border-color:rgba(255,215,0,0.06)"/>
+
+  <div class="note">
+    <strong>How to publish changes to everyone:</strong>
+    <ol>
+      <li>Use <em>Export JSON</em> to download the settings file.</li>
+      <li>Open the exported JSON, then replace the default diet/workout data files in your project (or embed the JSON into the static pages) and re-deploy to Netlify.</li>
+      <li>Alternatively, after editing in admin on your device, copy the saved logo base64 and paste it into /icons files and update the repo, then re-deploy.</li>
+    </ol>
+  </div>
+
+</main>
+
+<script>
+// --- default settings structure
+const DEFAULT_SETTINGS = {
+  title: "RK Health and Fitness App",
+  email: "rkfitnessapp81@gmail.com",
+  adminPass: "RKfit@2025",
+  logoData: null, // data URL base64
+  diet: {
+    veg: [
+      { breakfast: "Oats upma + 1 banana", lunch: "2 roti + dal + sabzi + salad", dinner: "Paneer bhurji + brown rice" },
+      { breakfast: "Poha + coconut water", lunch: "Vegetable pulao + curd", dinner: "Mixed veg curry + wheat roti" },
+      { breakfast: "Moong chilla + mint chutney", lunch: "Rajma + rice + salad", dinner: "Grilled paneer + veggies" },
+      { breakfast: "Upma + green tea", lunch: "Khichdi + curd", dinner: "Soya curry + chapati" },
+      { breakfast: "Besan chilla + tomato chutney", lunch: "Dal fry + roti + salad", dinner: "Paneer tikka + quinoa" },
+      { breakfast: "Idli + sambar", lunch: "Veg biryani + raita", dinner: "Tofu stir fry" },
+      { breakfast: "Sprouts bowl", lunch: "Veg thali (roti + sabzi + dal)", dinner: "Light paneer curry + rice" }
+    ],
+    nonveg: [
+      { breakfast: "Egg omelette + toast", lunch: "Chicken curry + rice", dinner: "Grilled fish + veggies" },
+      { breakfast: "Scrambled eggs + fruit", lunch: "Boiled chicken salad", dinner: "Egg curry + wheat roti" },
+      { breakfast: "Boiled eggs + oats", lunch: "Fish fry + rice + salad", dinner: "Chicken tikka + veggies" },
+      { breakfast: "Chicken sausage + toast", lunch: "Egg biryani", dinner: "Fish curry + roti" },
+      { breakfast: "Egg bhurji + roti", lunch: "Chicken pulao", dinner: "Grilled chicken + quinoa" },
+      { breakfast: "Protein shake + banana", lunch: "Fish thali", dinner: "Chicken soup + veggies" },
+      { breakfast: "Egg sandwich", lunch: "Chicken thali", dinner: "Light fish grill + salad" }
+    ],
+    combo: [
+      { breakfast: "Oats + scrambled eggs", lunch: "Chicken curry + roti", dinner: "Paneer tikka + veggies" },
+      { breakfast: "Upma + boiled eggs", lunch: "Fish curry + rice", dinner: "Veg pulao + curd" },
+      { breakfast: "Moong chilla + egg", lunch: "Chicken salad", dinner: "Paneer curry + quinoa" },
+      { breakfast: "Idli + omelette", lunch: "Egg biryani", dinner: "Veg khichdi + curd" },
+      { breakfast: "Sprouts + egg whites", lunch: "Fish fry + salad", dinner: "Light paneer gravy" },
+      { breakfast: "Poha + boiled eggs", lunch: "Chicken biryani", dinner: "Tofu stir fry" },
+      { breakfast: "Veg sandwich + eggs", lunch: "Fish thali", dinner: "Paneer curry + rice" }
+    ]
+  },
+  workouts: {
+    beginner: [
+      { title: "Bodyweight Squats", desc: "3 sets x 12 reps — chest up, sit back.", img: null },
+      { title: "Incline Push-ups", desc: "3 sets x 8–12 reps — use a bench.", img: null }
+    ],
+    intermediate: [
+      { title: "Bent-over Rows", desc: "4 sets x 8–10 reps — squeeze shoulder blades.", img: null }
+    ],
+    advanced: [
+      { title: "Barbell Deadlifts", desc: "5 sets x 5 reps — neutral spine.", img: null }
+    ]
+  }
+};
+
+// --- helpers
+function readSettings(){
+  try{
+    const raw = localStorage.getItem('rk_settings');
+    return raw ? JSON.parse(raw) : DEFAULT_SETTINGS;
+  }catch(e){ return DEFAULT_SETTINGS; }
+}
+function writeSettings(obj){
+  localStorage.setItem('rk_settings', JSON.stringify(obj));
+}
+
+// --- load to form
+function loadToForm(){
+  const s = readSettings();
+  document.getElementById('field_title').value = s.title || DEFAULT_SETTINGS.title;
+  document.getElementById('field_email').value = s.email || DEFAULT_SETTINGS.email;
+  document.getElementById('logo_preview').src = s.logoData || 'icons/icon-192.png';
+  document.getElementById('diet_json').value = JSON.stringify(s.diet, null, 2);
+  document.getElementById('workout_json').value = JSON.stringify(s.workouts, null, 2);
+}
+loadToForm();
+
+// logo upload handler
+document.getElementById('logo_file').addEventListener('change', function(evt){
+  const f = evt.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    document.getElementById('logo_preview').src = e.target.result;
+  }
+  reader.readAsDataURL(f);
+});
+
+// admin save (with password check)
+function adminSave(){
+  const pass = document.getElementById('admin_pass').value || '';
+  const sCurrent = readSettings();
+  if(pass !== sCurrent.adminPass && sCurrent.adminPass !== undefined){
+    alert('Wrong admin password. Enter correct current password to save.');
+    return;
+  }
+
+  // collect
+  const newTitle = document.getElementById('field_title').value.trim() || DEFAULT_SETTINGS.title;
+  const newEmail = document.getElementById('field_email').value.trim() || DEFAULT_SETTINGS.email;
+  const newPass = document.getElementById('field_newpass').value.trim();
+  const logo = document.getElementById('logo_preview').src;
+
+  // diet/workout JSON parse
+  let dietObj, workObj;
+  try{
+    dietObj = JSON.parse(document.getElementById('diet_json').value);
+  }catch(e){
+    alert('Diet JSON invalid. Fix it before saving.');
+    return;
+  }
+  try{
+    workObj = JSON.parse(document.getElementById('workout_json').value);
+  }catch(e){
+    alert('Workouts JSON invalid. Fix it before saving.');
+    return;
+  }
+
+  const newSettings = {
+    title: newTitle,
+    email: newEmail,
+    adminPass: newPass || sCurrent.adminPass || DEFAULT_SETTINGS.adminPass,
+    logoData: logo,
+    diet: dietObj,
+    workouts: workObj
+  };
+
+  writeSettings(newSettings);
+  alert('Settings saved locally. Click "Apply settings to this browser" to immediately apply.');
+}
+
+// export
+function exportSettings(){
+  const s = readSettings();
+  const data = JSON.stringify(s, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rk_settings_export.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// import
+function importSettings(){
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => {
+      try{
+        const obj = JSON.parse(ev.target.result);
+        writeSettings(obj);
+        loadToForm();
+        alert('Settings imported and loaded into the admin form. Click Save to lock password (if needed) and Apply.');
+      }catch(err){
+        alert('Import failed — invalid JSON.');
+      }
+    };
+    r.readAsText(f);
+  };
+  input.click();
+}
+
+// reset to defaults
+function resetSettings(){
+  if(!confirm('Reset all settings to defaults?')) return;
+  writeSettings(DEFAULT_SETTINGS);
+  loadToForm();
+  alert('Reset done.');
+}
+
+// apply to pages (loads settings into localStorage and informs user)
+function applyToPages(){
+  const s = readSettings();
+  // If you want the app pages to immediately reflect settings, they will read localStorage on load.
+  alert('Settings are saved in this browser. Reload your app pages to see changes. To make settings permanent in deployed site, export JSON and update files in repo.');
+}
+
+// download logo
+function downloadLogo(){
+  const s = readSettings();
+  const data = s.logoData || document.getElementById('logo_preview').src;
+  if(!data || !data.startsWith('data:')) { alert('No custom logo saved.'); return; }
+  const a = document.createElement('a');
+  a.href = data;
+  a.download = 'rk_logo.png';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+// helper to restrict access if not logged in
+(function protect(){
+  const s = readSettings();
+  const pass = prompt('Admin password required:');
+  if(pass !== s.adminPass){
+    alert('Wrong password. Redirecting to Home.');
+    location.href = 'index.html';
+  } else {
+    // show interface (we already loaded the form)
+  }
+})();
+</script>
+</body>
+</html>

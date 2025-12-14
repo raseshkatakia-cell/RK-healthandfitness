@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Copyright — RK Health and Fitness App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#000000">
+<style>
+.section-title { color:#f6c344; font-size:20px; font-weight:800; margin-bottom:10px; }
+.text { color:#d4b86a; font-size:15px; line-height:1.6; }
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <img src="icons/icon-192.png" alt="RK">
+    <div class="header-title">COPYRIGHT NOTICE</div>
+  </div>
+  <button class="btn" onclick="location.href='index.html'">HOME</button>
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <div class="section-title">© RK Health and Fitness App</div>
+    <p class="text">
+      All content in this application — including calculators, UI design, workflows,
+      diet plans, and workout structures — is protected under copyright law.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">Logo & Branding</div>
+    <p class="text">
+      The official RK logo and branding are exclusive intellectual property
+      of RK Health and Fitness App. Redistribution or imitation is prohibited.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">Unauthorized Use</div>
+    <p class="text">
+      No part of this app may be copied, modified, or republished without permission.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">Contact</div>
+    <p class="text">
+      For licensing or permission requests:
+      <br><span style="color:#f6c344;">rkfitnessapp81@gmail.com</span>
+    </p>
+  </section>
+
+</main>
+</body>
+<script>
+(function(){
+  try{
+    const s = JSON.parse(localStorage.getItem('rk_settings') || 'null');
+    if(!s) return;
+    // title
+    if(s.title){
+      // set page header title if present
+      const hdr = document.querySelector('.header-title');
+      if(hdr) hdr.textContent = s.title.includes('Admin') ? 'RK Admin' : s.title;
+      // set document title
+      document.title = s.title;
+    }
+    // email replacement (if any element references it)
+    if(s.email){
+      document.querySelectorAll('span, p, a, div').forEach(el=>{
+        if(el.innerHTML && el.innerHTML.indexOf('rkfitnessapp81@gmail.com') !== -1){
+          el.innerHTML = el.innerHTML.replace(/rkfitnessapp81@gmail.com/g, s.email);
+        }
+      });
+    }
+    // logo
+    if(s.logoData){
+      document.querySelectorAll('img').forEach(img=>{
+        const src = img.getAttribute('src') || '';
+        if(src.indexOf('icons/icon-192.png') !== -1 || src.indexOf('icons/icon-512.png') !== -1){
+          img.src = s.logoData;
+        }
+      });
+    }
+    // If diet/workouts are present and pages expect them via window.RK_DYNAMIC, attach them:
+    if(s.diet) window.RK_DYNAMIC = window.RK_DYNAMIC || {};
+    if(s.diet) window.RK_DYNAMIC.diet = s.diet;
+    if(s.workouts) window.RK_DYNAMIC.workouts = s.workouts;
+  }catch(e){
+    console.log('No admin settings applied');
+  }
+})();
+</script>
+</html>

@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Calculators — RK Health and Fitness App</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">🧮 Calculators</div>
+  <button class="btn" onclick="location.href='index.html'">← Back</button>
+</header>
+
+<div class="container">
+
+<!-- ========================================== -->
+<!-- ===============  BMI  ===================== -->
+<!-- ========================================== -->
+
+<div class="card" id="bmi">
+  <div class="kicker">BODY MASS INDEX</div>
+  <div class="title">BMI Calculator</div>
+
+  <label class="small">Height (cm)</label>
+  <input id="bmi_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Weight (kg)</label>
+  <input id="bmi_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcBMI()">Calculate BMI</button>
+
+  <p class="small" id="bmi_result"></p>
+</div>
+
+<script>
+function calcBMI(){
+  const h = parseFloat(document.getElementById('bmi_h').value);
+  const w = parseFloat(document.getElementById('bmi_w').value);
+
+  if(!h || !w){
+    document.getElementById('bmi_result').innerHTML = "Enter valid height & weight.";
+    return;
+  }
+
+  const bmi = w / ((h/100)*(h/100));
+  let status = "";
+  if(bmi < 18.5) status = "Underweight";
+  else if(bmi < 24.9) status = "Normal";
+  else if(bmi < 29.9) status = "Overweight";
+  else status = "Obese";
+
+  document.getElementById("bmi_result").innerHTML =
+    "BMI: " + bmi.toFixed(1) + "<br>Status: " + status;
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ===============  BMR  ===================== -->
+<!-- ========================================== -->
+
+<div class="card" id="bmr">
+  <div class="kicker">BASAL METABOLIC RATE</div>
+  <div class="title">BMR Calculator</div>
+
+  <label class="small">Age</label>
+  <input id="bmr_age" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Gender</label>
+  <select id="bmr_gen" class="btn" style="background:#222;color:#f6c344">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </select>
+
+  <label class="small">Height (cm)</label>
+  <input id="bmr_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Weight (kg)</label>
+  <input id="bmr_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcBMR()">Calculate BMR</button>
+
+  <p class="small" id="bmr_result"></p>
+</div>
+
+<script>
+function calcBMR(){
+  const age = parseFloat(document.getElementById('bmr_age').value);
+  const h = parseFloat(document.getElementById('bmr_h').value);
+  const w = parseFloat(document.getElementById('bmr_w').value);
+  const g = document.getElementById('bmr_gen').value;
+
+  if(!age || !h || !w){
+    document.getElementById('bmr_result').innerHTML = "Enter valid details.";
+    return;
+  }
+
+  let bmr = 0;
+  if(g === "m") bmr = 88.362 + (13.397*w) + (4.799*h) - (5.677*age);
+  else bmr = 447.593 + (9.247*w) + (3.098*h) - (4.330*age);
+
+  document.getElementById("bmr_result").innerHTML =
+    "BMR: " + bmr.toFixed(0) + " calories/day";
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ===============  TDEE  ==================== -->
+<!-- ========================================== -->
+
+<div class="card" id="tdee">
+  <div class="kicker">TOTAL DAILY ENERGY EXPENDITURE</div>
+  <div class="title">TDEE Calculator</div>
+
+  <label class="small">BMR Value (from above)</label>
+  <input id="tdee_bmr" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Activity Level</label>
+  <select id="tdee_act" class="btn" style="background:#222;color:#f6c344">
+    <option value="1.2">Sedentary</option>
+    <option value="1.375">Light</option>
+    <option value="1.55">Moderate</option>
+    <option value="1.725">Heavy</option>
+    <option value="1.9">Athlete</option>
+  </select>
+
+  <button class="btn" onclick="calcTDEE()">Calculate TDEE</button>
+
+  <p class="small" id="tdee_result"></p>
+</div>
+
+<script>
+function calcTDEE(){
+  const b = parseFloat(document.getElementById('tdee_bmr').value);
+  const act = parseFloat(document.getElementById('tdee_act').value);
+
+  if(!b){
+    document.getElementById('tdee_result').innerHTML = "Enter BMR.";
+    return;
+  }
+
+  const tdee = b * act;
+
+  document.getElementById("tdee_result").innerHTML =
+    "TDEE: " + tdee.toFixed(0) + " calories/day";
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ========== BODY FAT % (US NAVY) ========== -->
+<!-- ========================================== -->
+
+<div class="card" id="bodyfat">
+  <div class="kicker">BODY FAT PERCENTAGE</div>
+  <div class="title">Body Fat % (US Navy)</div>
+
+  <label class="small">Gender</label>
+  <select id="bf_gen" class="btn" style="background:#222;color:#f6c344">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </select>
+
+  <label class="small">Height (cm)</label>
+  <input id="bf_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Neck (cm)</label>
+  <input id="bf_neck" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Waist (cm)</label>
+  <input id="bf_waist" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Hips (cm, for females)</label>
+  <input id="bf_hips" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcBF()">Calculate Body Fat %</button>
+
+  <p class="small" id="bf_result"></p>
+</div>
+
+<script>
+function calcBF(){
+  const g = document.getElementById('bf_gen').value;
+  const h = parseFloat(document.getElementById('bf_h').value);
+  const neck = parseFloat(document.getElementById('bf_neck').value);
+  const waist = parseFloat(document.getElementById('bf_waist').value);
+  const hips = parseFloat(document.getElementById('bf_hips').value);
+
+  if(!h || !neck || !waist){
+    document.getElementById('bf_result').innerHTML = "Missing required data.";
+    return;
+  }
+
+  let bf;
+  if(g === "m"){
+    bf = 495 / (1.0324 - 0.19077*Math.log10(waist - neck) + 0.15456*Math.log10(h)) - 450;
+  } else {
+    if(!hips){
+      document.getElementById('bf_result').innerHTML = "Hips required for females.";
+      return;
+    }
+    bf = 495 / (1.29579 - 0.35004*Math.log10(waist + hips - neck) + 0.22100*Math.log10(h)) - 450;
+  }
+
+  document.getElementById("bf_result").innerHTML =
+    "Body Fat: " + bf.toFixed(1) + "%";
+}
+</script>
+
+
+<!-- ========================================== -->
+<!-- ======== WAIST-HEIGHT RATIO (WHtR) ======== -->
+<!-- ========================================== -->
+
+<div class="card" id="whtr">
+  <div class="kicker">WAIST / HEIGHT RATIO</div>
+  <div class="title">WHtR Calculator</div>
+
+  <label class="small">Waist (cm)</label>
+  <input id="whtr_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Height (cm)</label>
+  <input id="whtr_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcWHtR()">Calculate WHtR</button>
+
+  <p class="small" id="whtr_result"></p>
+</div>
+
+<script>
+function calcWHtR(){
+  const w = parseFloat(document.getElementById('whtr_w').value);
+  const h = parseFloat(document.getElementById('whtr_h').value);
+  if(!w || !h){
+    document.getElementById('whtr_result').innerHTML = "Enter waist & height.";
+    return;
+  }
+  const r = w / h;
+  document.getElementById("whtr_result").innerHTML =
+    "WHtR: " + r.toFixed(2);
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ========= WAIST-HIP RATIO (WHR) =========== -->
+<!-- ========================================== -->
+
+<div class="card" id="whr">
+  <div class="kicker">WAIST / HIP RATIO</div>
+  <div class="title">WHR Calculator</div>
+
+  <label class="small">Waist (cm)</label>
+  <input id="whr_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Hip (cm)</label>
+  <input id="whr_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcWHR()">Calculate WHR</button>
+
+  <p class="small" id="whr_result"></p>
+</div>
+
+<script>
+function calcWHR(){
+  const w = parseFloat(document.getElementById('whr_w').value);
+  const h = parseFloat(document.getElementById('whr_h').value);
+  if(!w || !h){
+    document.getElementById('whr_result').innerHTML = "Enter waist & hip.";
+    return;
+  }
+  const r = w / h;
+  document.getElementById("whr_result").innerHTML =
+    "WHR: " + r.toFixed(2);
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ============= FFMI ======================== -->
+<!-- ========================================== -->
+
+<div class="card" id="ffmi">
+  <div class="kicker">FAT-FREE MASS INDEX</div>
+  <div class="title">FFMI Calculator</div>
+
+  <label class="small">Weight (kg)</label>
+  <input id="ffmi_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Body Fat %</label>
+  <input id="ffmi_bf" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Height (cm)</label>
+  <input id="ffmi_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcFFMI()">Calculate FFMI</button>
+
+  <p class="small" id="ffmi_result"></p>
+</div>
+
+<script>
+function calcFFMI(){
+  const w = parseFloat(document.getElementById('ffmi_w').value);
+  const bf = parseFloat(document.getElementById('ffmi_bf').value);
+  const h = parseFloat(document.getElementById('ffmi_h').value);
+
+  if(!w || !bf || !h){
+    document.getElementById('ffmi_result').innerHTML = "Missing values.";
+    return;
+  }
+
+  const lean = w * (1 - bf/100);
+  const ffmi = lean / ((h/100) * (h/100));
+  document.getElementById("ffmi_result").innerHTML =
+    "FFMI: " + ffmi.toFixed(2);
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ========== IDEAL BODY WEIGHT (IBW) ======== -->
+<!-- ========================================== -->
+
+<div class="card" id="ibw">
+  <div class="kicker">IDEAL BODY WEIGHT</div>
+  <div class="title">IBW Calculator</div>
+
+  <label class="small">Gender</label>
+  <select id="ibw_gen" class="btn" style="background:#222;color:#f6c344">
+    <option value="m">Male</option>
+    <option value="f">Female</option>
+  </select>
+
+  <label class="small">Height (cm)</label>
+  <input id="ibw_h" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcIBW()">Calculate IBW</button>
+
+  <p class="small" id="ibw_result"></p>
+</div>
+
+<script>
+function calcIBW(){
+  const g = document.getElementById('ibw_gen').value;
+  const h = parseFloat(document.getElementById('ibw_h').value);
+  if(!h){
+    document.getElementById('ibw_result').innerHTML = "Enter height.";
+    return;
+  }
+
+  const base = g === "m" ? 50 : 45.5;
+  const ibw = base + 0.9 * (h - 152);
+  document.getElementById("ibw_result").innerHTML =
+    "IBW: " + ibw.toFixed(1) + " kg";
+}
+</script>
+
+<!-- ========================================== -->
+<!-- =============== WATER INTAKE ============== -->
+<!-- ========================================== -->
+
+<div class="card" id="water">
+  <div class="kicker">DAILY WATER INTAKE</div>
+  <div class="title">Water Intake Calculator</div>
+
+  <label class="small">Weight (kg)</label>
+  <input id="water_w" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <button class="btn" onclick="calcWater()">Calculate Water Intake</button>
+
+  <p class="small" id="water_result"></p>
+</div>
+
+<script>
+function calcWater(){
+  const w = parseFloat(document.getElementById('water_w').value);
+  if(!w){
+    document.getElementById('water_result').innerHTML = "Enter weight.";
+    return;
+  }
+  const ml = w * 35;
+  document.getElementById('water_result').innerHTML =
+    "Recommended Water: " + ml + " ml/day";
+}
+</script>
+
+<!-- ========================================== -->
+<!-- ======= MACRO SPLIT CALCULATOR =========== -->
+<!-- ========================================== -->
+
+<div class="card" id="macro">
+  <div class="kicker">MACRONUTRIENT SPLIT</div>
+  <div class="title">Macro Calculator</div>
+
+  <label class="small">Daily Calories</label>
+  <input id="mac_cals" type="number" class="btn" style="background:#222;color:#f6c344">
+
+  <label class="small">Protein (%)</label>
+  <input id="mac_p" type="number" class="btn" style="background:#222;color:#f6c344" value="30">
+
+  <label class="small">Carbs (%)</label>
+  <input id="mac_c" type="number" class="btn" style="background:#222;color:#f6c344" value="45">
+
+  <label class="small">Fats (%)</label>
+  <input id="mac_f" type="number" class="btn" style="background:#222;color:#f6c344" value="25">
+
+  <button class="btn" onclick="calcMacros()">Calculate Macros</button>
+
+  <p class="small" id="mac_result"></p>
+</div>
+
+<script>
+function calcMacros(){
+  const cal = parseFloat(document.getElementById('mac_cals').value);
+  const p = parseFloat(document.getElementById('mac_p').value);
+  const c = parseFloat(document.getElementById('mac_c').value);
+  const f = parseFloat(document.getElementById('mac_f').value);
+
+  if(!cal){
+    document.getElementById('mac_result').innerHTML = "Enter calories.";
+    return;
+  }
+
+  const protein = (cal * (p/100)) / 4;
+  const carbs = (cal * (c/100)) / 4;
+  const fats = (cal * (f/100)) / 9;
+
+  document.getElementById("mac_result").innerHTML =
+    "Protein: " + protein.toFixed(0) + " g<br>" +
+    "Carbs: " + carbs.toFixed(0) + " g<br>" +
+    "Fats: " + fats.toFixed(0) + " g";
+}
+</script>
+
+</div>
+</body>
+<script>
+(function(){
+  try{
+    const s = JSON.parse(localStorage.getItem('rk_settings') || 'null');
+    if(!s) return;
+    // title
+    if(s.title){
+      // set page header title if present
+      const hdr = document.querySelector('.header-title');
+      if(hdr) hdr.textContent = s.title.includes('Admin') ? 'RK Admin' : s.title;
+      // set document title
+      document.title = s.title;
+    }
+    // email replacement (if any element references it)
+    if(s.email){
+      document.querySelectorAll('span, p, a, div').forEach(el=>{
+        if(el.innerHTML && el.innerHTML.indexOf('rkfitnessapp81@gmail.com') !== -1){
+          el.innerHTML = el.innerHTML.replace(/rkfitnessapp81@gmail.com/g, s.email);
+        }
+      });
+    }
+    // logo
+    if(s.logoData){
+      document.querySelectorAll('img').forEach(img=>{
+        const src = img.getAttribute('src') || '';
+        if(src.indexOf('icons/icon-192.png') !== -1 || src.indexOf('icons/icon-512.png') !== -1){
+          img.src = s.logoData;
+        }
+      });
+    }
+    // If diet/workouts are present and pages expect them via window.RK_DYNAMIC, attach them:
+    if(s.diet) window.RK_DYNAMIC = window.RK_DYNAMIC || {};
+    if(s.diet) window.RK_DYNAMIC.diet = s.diet;
+    if(s.workouts) window.RK_DYNAMIC.workouts = s.workouts;
+  }catch(e){
+    console.log('No admin settings applied');
+  }
+})();
+</script>
+</html>

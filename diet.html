@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Diet Planner — RK Health and Fitness App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#000000">
+
+<style>
+.tabs {
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.tab-btn {
+  padding:10px 14px;
+  border-radius:10px;
+  background:linear-gradient(90deg,#0a0000,#000);
+  border:1px solid rgba(200,155,0,0.20);
+  color:#f6c344;
+  font-weight:800;
+  cursor:pointer;
+}
+.tab-btn.active {
+  background:linear-gradient(90deg,#b8860b,#f6c344);
+  color:#000;
+  border:1px solid #000;
+}
+
+.day-card {
+  background:rgba(255,215,0,0.03);
+  border:1px solid rgba(200,155,0,0.08);
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:18px;
+}
+.day-title {
+  color:#f6c344;
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+.meal {
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(200,155,0,0.2);
+}
+.meal-title {
+  color:#f6c344;
+  font-size:17px;
+  font-weight:800;
+}
+.meal-desc {
+  color:#d4b86a;
+  font-size:15px;
+  line-height:1.5;
+}
+.selector {
+  display:flex;
+  gap:10px;
+  margin:16px 0;
+}
+.sel-btn {
+  padding:10px 14px;
+  border-radius:12px;
+  background:#000;
+  border:1px solid #f6c344;
+  color:#f6c344;
+  font-weight:800;
+  cursor:pointer;
+}
+.sel-btn.active {
+  background:#f6c344;
+  color:#000;
+  border-color:#000;
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="icons/icon-192.png" alt="RK" />
+    <div class="header-title">DIET PLANNER</div>
+  </div>
+
+  <div style="display:flex;gap:8px;">
+    <button class="btn" onclick="location.href='index.html'">HOME</button>
+    <button class="btn" onclick="location.href='calculators.html'">CALCULATORS</button>
+    <button class="btn" onclick="location.href='workouts.html'">WORKOUTS</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <div class="kicker">PLAN TYPE</div>
+    <div class="selector">
+      <button class="sel-btn active" onclick="switchPlan('veg')">VEG</button>
+      <button class="sel-btn" onclick="switchPlan('nonveg')">NON-VEG</button>
+      <button class="sel-btn" onclick="switchPlan('combo')">COMBINED</button>
+    </div>
+  </section>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showDay(1)">Day 1</button>
+    <button class="tab-btn" onclick="showDay(2)">Day 2</button>
+    <button class="tab-btn" onclick="showDay(3)">Day 3</button>
+    <button class="tab-btn" onclick="showDay(4)">Day 4</button>
+    <button class="tab-btn" onclick="showDay(5)">Day 5</button>
+    <button class="tab-btn" onclick="showDay(6)">Day 6</button>
+    <button class="tab-btn" onclick="showDay(7)">Day 7</button>
+  </div>
+
+  <!-- 7 DAYS CONTENT -->
+  <div id="diet-content"></div>
+
+</main>
+
+<script>
+/* 7-day complete meal plans — VEG / NONVEG / COMBO */
+/* Each day has different meals — no repetition */
+
+const dietPlans = {
+  veg: [
+    { breakfast: "Oats upma + 1 banana", lunch: "2 roti + dal + sabzi + salad", dinner: "Paneer bhurji + brown rice" },
+    { breakfast: "Poha + coconut water", lunch: "Vegetable pulao + curd", dinner: "Mixed veg curry + wheat roti" },
+    { breakfast: "Moong chilla + mint chutney", lunch: "Rajma + rice + salad", dinner: "Grilled paneer + veggies" },
+    { breakfast: "Upma + green tea", lunch: "Khichdi + curd", dinner: "Soya curry + chapati" },
+    { breakfast: "Besan chilla + tomato chutney", lunch: "Dal fry + roti + salad", dinner: "Paneer tikka + quinoa" },
+    { breakfast: "Idli + sambar", lunch: "Veg biryani + raita", dinner: "Tofu stir fry" },
+    { breakfast: "Sprouts bowl", lunch: "Veg thali (roti + sabzi + dal)", dinner: "Light paneer curry + rice" },
+  ],
+
+  nonveg: [
+    { breakfast: "Egg omelette + toast", lunch: "Chicken curry + rice", dinner: "Grilled fish + veggies" },
+    { breakfast: "Scrambled eggs + fruit", lunch: "Boiled chicken salad", dinner: "Egg curry + wheat roti" },
+    { breakfast: "Boiled eggs + oats", lunch: "Fish fry + rice + salad", dinner: "Chicken tikka + veggies" },
+    { breakfast: "Chicken sausage + toast", lunch: "Egg biryani", dinner: "Fish curry + roti" },
+    { breakfast: "Egg bhurji + roti", lunch: "Chicken pulao", dinner: "Grilled chicken + quinoa" },
+    { breakfast: "Protein shake + banana", lunch: "Fish thali", dinner: "Chicken soup + veggies" },
+    { breakfast: "Egg sandwich", lunch: "Chicken thali", dinner: "Light fish grill + salad" },
+  ],
+
+  combo: [
+    { breakfast: "Oats + scrambled eggs", lunch: "Chicken curry + roti", dinner: "Paneer tikka + veggies" },
+    { breakfast: "Upma + boiled eggs", lunch: "Fish curry + rice", dinner: "Veg pulao + curd" },
+    { breakfast: "Moong chilla + egg", lunch: "Chicken salad", dinner: "Paneer curry + quinoa" },
+    { breakfast: "Idli + omelette", lunch: "Egg biryani", dinner: "Veg khichdi + curd" },
+    { breakfast: "Sprouts + egg whites", lunch: "Fish fry + salad", dinner: "Light paneer gravy" },
+    { breakfast: "Poha + boiled eggs", lunch: "Chicken biryani", dinner: "Tofu stir fry" },
+    { breakfast: "Veg sandwich + eggs", lunch: "Fish thali", dinner: "Paneer curry + rice" },
+  ]
+};
+
+let currentPlan = "veg";
+let currentDay = 1;
+
+function renderDay() {
+  const diet = dietPlans[currentPlan][currentDay - 1];
+  const div = document.getElementById("diet-content");
+
+  div.innerHTML = `
+    <div class="day-card">
+      <div class="day-title">DAY ${currentDay}</div>
+
+      <div class="meal">
+        <div class="meal-title">BREAKFAST</div>
+        <div class="meal-desc">${diet.breakfast}</div>
+      </div>
+
+      <div class="meal">
+        <div class="meal-title">LUNCH</div>
+        <div class="meal-desc">${diet.lunch}</div>
+      </div>
+
+      <div class="meal">
+        <div class="meal-title">DINNER</div>
+        <div class="meal-desc">${diet.dinner}</div>
+      </div>
+    </div>
+  `;
+}
+
+function switchPlan(p) {
+  currentPlan = p;
+  document.querySelectorAll(".sel-btn").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  renderDay();
+}
+
+function showDay(n) {
+  currentDay = n;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  event.target.classList.add("active");
+  renderDay();
+}
+
+window.onload = () => renderDay();
+</script>
+
+</body>
+<script>
+(function(){
+  try{
+    const s = JSON.parse(localStorage.getItem('rk_settings') || 'null');
+    if(!s) return;
+    // title
+    if(s.title){
+      // set page header title if present
+      const hdr = document.querySelector('.header-title');
+      if(hdr) hdr.textContent = s.title.includes('Admin') ? 'RK Admin' : s.title;
+      // set document title
+      document.title = s.title;
+    }
+    // email replacement (if any element references it)
+    if(s.email){
+      document.querySelectorAll('span, p, a, div').forEach(el=>{
+        if(el.innerHTML && el.innerHTML.indexOf('rkfitnessapp81@gmail.com') !== -1){
+          el.innerHTML = el.innerHTML.replace(/rkfitnessapp81@gmail.com/g, s.email);
+        }
+      });
+    }
+    // logo
+    if(s.logoData){
+      document.querySelectorAll('img').forEach(img=>{
+        const src = img.getAttribute('src') || '';
+        if(src.indexOf('icons/icon-192.png') !== -1 || src.indexOf('icons/icon-512.png') !== -1){
+          img.src = s.logoData;
+        }
+      });
+    }
+    // If diet/workouts are present and pages expect them via window.RK_DYNAMIC, attach them:
+    if(s.diet) window.RK_DYNAMIC = window.RK_DYNAMIC || {};
+    if(s.diet) window.RK_DYNAMIC.diet = s.diet;
+    if(s.workouts) window.RK_DYNAMIC.workouts = s.workouts;
+  }catch(e){
+    console.log('No admin settings applied');
+  }
+})();
+</script>
+</html>

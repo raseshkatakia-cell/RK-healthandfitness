@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RK Health and Fitness App</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#000000" />
+</head>
+<body>
+
+<!-- SPLASH (2.5s) -->
+<div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:9999;animation:splashOut 2.5s forwards;">
+  <!-- Use icons/icon-512.png or replace with base64 HQ logo -->
+  <img src="icons/icon-512.png" alt="RK Logo" style="width:280px;height:auto;filter:drop-shadow(0 0 28px #f6c344);" />
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div style="display:flex;align-items:center;gap:12px;cursor:pointer" id="brand" title="Tap 7 times for admin">
+    <img src="icons/icon-192.png" alt="RK" />
+    <div>
+      <div class="header-title">RK Health and Fitness App</div>
+      <div style="font-size:11px;color:#d4b86a;margin-top:2px">Premium · Black & Gold</div>
+    </div>
+  </div>
+
+  <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+    <button class="btn" onclick="location.href='calculators.html'">CALCULATORS</button>
+    <button class="btn" onclick="location.href='workouts.html'">WORKOUTS</button>
+    <button class="btn" onclick="location.href='diet.html'">DIET PLANNER</button>
+  </div>
+</header>
+
+<!-- MAIN CONTAINER -->
+<main class="container" id="main">
+  <section class="card">
+    <div class="kicker">WELCOME</div>
+    <div class="title">RK Health and Fitness App</div>
+    <p class="small">
+      A premium fitness toolkit: accurate calculators, 7-day diet plans, workout routines and offline PWA support.
+      Everything runs locally — no user data is collected.
+    </p>
+
+    <div class="icon-row" style="margin-top:14px;">
+      <div class="icon-btn" onclick="location.href='calculators.html'">
+        🧮 CALCULATORS
+        <small>All body calculators & unit systems</small>
+      </div>
+
+      <div class="icon-btn" onclick="location.href='workouts.html'">
+        🏋 WORKOUTS
+        <small>Beginner → Advanced plans with illustrations</small>
+      </div>
+
+      <div class="icon-btn" onclick="location.href='diet.html'">
+        🍽 DIET PLANNER
+        <small>7-day veg / non-veg / combined plans</small>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+      <button class="btn" id="shareBtn" onclick="shareApp()">🔗 SHARE APP</button>
+      <button class="btn" id="installBtn" style="display:none" onclick="promptInstall()">📥 INSTALL APP</button>
+    </div>
+  </section>
+
+  <!-- Info & Legal Buttons -->
+  <div class="card">
+    <div class="kicker">INFO & LEGAL</div>
+    <div class="icon-row">
+      <div class="icon-btn" onclick="location.href='privacy.html'">🔒 Privacy Policy <small>Data & permissions</small></div>
+      <div class="icon-btn" onclick="location.href='terms.html'">📘 Terms & Conditions <small>User agreement</small></div>
+      <div class="icon-btn" onclick="location.href='copyright.html'">© Copyright <small>Ownership & contact</small></div>
+    </div>
+  </div>
+
+  <!-- Quick Tools preview -->
+  <div class="card">
+    <div class="kicker">QUICK TOOLS</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+      <div class="card" style="padding:12px;">
+        <strong>BMI</strong>
+        <p class="small">Tap to open calculators</p>
+        <button class="btn" onclick="location.href='calculators.html#bmi'">Open</button>
+      </div>
+      <div class="card" style="padding:12px;">
+        <strong>BMR</strong>
+        <p class="small">Basal metabolic rate</p>
+        <button class="btn" onclick="location.href='calculators.html#bmr'">Open</button>
+      </div>
+      <div class="card" style="padding:12px;">
+        <strong>TDEE</strong>
+        <p class="small">Daily calorie needs</p>
+        <button class="btn" onclick="location.href='calculators.html#tdee'">Open</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="card" style="text-align:center;">
+    <div class="small">© <span id="year"></span> RK Health and Fitness App — Contact: <span style="color:#f6c344">rkfitnessapp81@gmail.com</span></div>
+  </footer>
+</main>
+
+<!-- Scripts -->
+<script>
+/* dynamic year */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* PWA install prompt handler */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'inline-block';
+});
+function promptInstall(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{ deferredPrompt = null; document.getElementById('installBtn').style.display='none'; });
+}
+
+/* Share fallback */
+function shareApp(){
+  if(navigator.share){
+    navigator.share({ title: 'RK Health and Fitness App', text: 'Try RK Health and Fitness App', url: window.location.href })
+      .catch(()=>{alert('Share cancelled')});
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(()=> alert('Link copied to clipboard'));
+  }
+}
+
+/* Hidden admin: tap logo 7 times */
+let tapCount = 0;
+document.getElementById('brand').addEventListener('click', ()=>{
+  tapCount++;
+  if(tapCount >= 7){
+    tapCount = 0;
+    const p = prompt('Admin Login — enter password:');
+    if(p === 'RKfit@2025'){ location.href='admin.html'; } else { alert('Wrong password'); }
+  }
+});
+
+/* register service worker */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js').catch(()=>console.log('service worker failed'));
+}
+
+/* splash hide (in case animation interrupted) */
+setTimeout(()=>{ const s = document.getElementById('splash'); if(s) s.style.display='none'; },3500);
+</script>
+
+<style>
+/* small splash keyframes and safety */
+@keyframes splashOut{0%{opacity:1}70%{opacity:1}100%{opacity:0;display:none}}
+/* inline safety style for header brand clickable */
+#brand { user-select:none; }
+</style>
+
+</body>
+<script>
+(function(){
+  try{
+    const s = JSON.parse(localStorage.getItem('rk_settings') || 'null');
+    if(!s) return;
+    // title
+    if(s.title){
+      // set page header title if present
+      const hdr = document.querySelector('.header-title');
+      if(hdr) hdr.textContent = s.title.includes('Admin') ? 'RK Admin' : s.title;
+      // set document title
+      document.title = s.title;
+    }
+    // email replacement (if any element references it)
+    if(s.email){
+      document.querySelectorAll('span, p, a, div').forEach(el=>{
+        if(el.innerHTML && el.innerHTML.indexOf('rkfitnessapp81@gmail.com') !== -1){
+          el.innerHTML = el.innerHTML.replace(/rkfitnessapp81@gmail.com/g, s.email);
+        }
+      });
+    }
+    // logo
+    if(s.logoData){
+      document.querySelectorAll('img').forEach(img=>{
+        const src = img.getAttribute('src') || '';
+        if(src.indexOf('icons/icon-192.png') !== -1 || src.indexOf('icons/icon-512.png') !== -1){
+          img.src = s.logoData;
+        }
+      });
+    }
+    // If diet/workouts are present and pages expect them via window.RK_DYNAMIC, attach them:
+    if(s.diet) window.RK_DYNAMIC = window.RK_DYNAMIC || {};
+    if(s.diet) window.RK_DYNAMIC.diet = s.diet;
+    if(s.workouts) window.RK_DYNAMIC.workouts = s.workouts;
+  }catch(e){
+    console.log('No admin settings applied');
+  }
+})();
+</script>
+</html>
